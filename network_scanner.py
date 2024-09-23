@@ -1,19 +1,29 @@
 # Network Scanner
 import scapy.all as scapy
-# Creating a Packet
+import optparse
 
-arp_request = scapy.ARP(pdst="192.168.1.1/24")
-arp_broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
-arp_brodcast_request = arp_broadcast/arp_request
+def get_arguments():
+    parser = optparse.OptionParser()
+    parser.add_option("-r", "--range", dest="network_ip", help="To enter device IP or range IP")
+    options, arguments = parser.parse_args()
+
+    return options
 
 
-# Sending and receiving a packet
-#print(arp_request.summary())
-#scapy.ls(arp_request)
+def scan(network_ip):
+    arp_request = scapy.ARP(pdst=network_ip)
+    arp_broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
+    arp_brodcast_request = arp_broadcast/arp_request
 
-answered = scapy.srp(arp_brodcast_request, timeout=1, verbose=False)[0]
 
-for ans in answered:
-    print(ans[1].psrc + " " + ans[1].hwsrc)
-# Parsing answers
-# Displaying packets
+    #print(arp_request.summary())
+    #scapy.ls(arp_request)
+
+    answered = scapy.srp(arp_brodcast_request, timeout=1, verbose=False)[0]
+
+    for ans in answered:
+        print(ans[1].psrc + " " + ans[1].hwsrc)
+
+
+options = get_arguments()
+scan(options.network_ip)
