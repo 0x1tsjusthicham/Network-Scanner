@@ -7,6 +7,9 @@ def get_arguments():
     parser.add_option("-r", "--range", dest="network_ip", help="To enter device IP or range IP")
     options, arguments = parser.parse_args()
 
+    if not options.network_ip:
+        parser.error("[-] PLease specify an ip address, -h for help")
+
     return options
 
 
@@ -21,9 +24,19 @@ def scan(network_ip):
 
     answered = scapy.srp(arp_brodcast_request, timeout=1, verbose=False)[0]
 
+    clients_list = []
     for ans in answered:
-        print(ans[1].psrc + " " + ans[1].hwsrc)
+        client_dict = {"IP": ans[1].psrc, "MAC":ans[1].hwsrc}
+        clients_list.append(client_dict)
+    
+    return clients_list
 
+def display_clients(clients):
+    print("IP Address\t\t MAC Address")
+    print("-" * 42)
+    for client in clients:
+        print(client["IP"], "\t\t", client["MAC"])
 
 options = get_arguments()
-scan(options.network_ip)
+clients = scan(options.network_ip)
+display_clients(clients)
