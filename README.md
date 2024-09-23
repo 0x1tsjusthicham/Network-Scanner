@@ -68,4 +68,4 @@ IP Address           MAC Address
 - The script only detects devices that respond to ARP requests, which typically includes most devices on a local network.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+@itsjusthicham
